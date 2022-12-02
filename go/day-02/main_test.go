@@ -4,64 +4,56 @@ import (
 	"testing"
 )
 
-func TestCalcScore(t *testing.T) {
+func TestScoreByOutcome(t *testing.T) {
 	testCases := []struct {
-		name     string
-		them, us byte
-		want     int
+		name    string
+		them    byte
+		outcome byte
+		score   int
 	}{
 		{
-			name: "draw: rock vs rock (A,X)",
-			them: them("rock"), us: us("rock"),
-			want: 4,
+			"(A, X) rock:lose:scissors",
+			them("rock"), outcome("lose"), 3,
 		},
 		{
-			name: "win: rock vs paper (A,Y)",
-			them: them("rock"), us: us("paper"),
-			want: 8,
+			"(A, Y) rock:draw:rock",
+			them("rock"), outcome("draw"), 4,
 		},
 		{
-			name: "lose: rock vs scissors (A,Z)",
-			them: them("rock"), us: us("scissors"),
-			want: 3,
+			"(A, z) rock:win:paper",
+			them("rock"), outcome("win"), 8,
 		},
 		{
-			name: "lose: paper vs rock (B,X)",
-			them: them("paper"), us: us("rock"),
-			want: 1,
+			"(B, X) paper:lose:rock",
+			them("paper"), outcome("lose"), 1,
 		},
 		{
-			name: "draw: paper vs paper (B,Y)",
-			them: them("paper"), us: us("paper"),
-			want: 5,
+			"(B, Y) paper:draw:paper",
+			them("paper"), outcome("draw"), 5,
 		},
 		{
-			name: "win: paper vs scissors (B,Z)",
-			them: them("paper"), us: us("scissors"),
-			want: 9,
+			"(B, Z) paper:win:scissors",
+			them("paper"), outcome("win"), 9,
 		},
 		{
-			name: "win: scissors vs rock (C,X)",
-			them: them("scissors"), us: us("rock"),
-			want: 7,
+			"(C, X) scissors:lose:paper",
+			them("scissors"), outcome("lose"), 2,
 		},
 		{
-			name: "lose: scissors vs paper (C,Y)",
-			them: them("scissors"), us: us("paper"),
-			want: 2,
+			"(C, Y) scissors:draw:scissors",
+			them("scissors"), outcome("draw"), 6,
 		},
 		{
-			name: "draw: scissors vs scissors (C,Z)",
-			them: them("scissors"), us: us("scissors"),
-			want: 6,
+			"(C, Z) scissors:win:rock",
+			them("scissors"), outcome("win"), 7,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := calcScore(tc.them, tc.us)
+			got := scoreByOutcome(tc.them, tc.outcome)
 
-			if got != tc.want {
-				t.Errorf("unexpected value received. got: %d want: %d", got, tc.want)
+			if got != tc.score {
+				t.Errorf("unexpected score received. got: %d want: %d", got, tc.score)
 			}
 		})
 	}
@@ -80,6 +72,15 @@ func them(shape string) byte {
 	}
 }
 
-func us(shape string) byte {
-	return them(shape)
+func outcome(res string) byte {
+	switch res {
+	case "win":
+		return 67
+	case "draw":
+		return 66
+	case "lose":
+		return 65
+	default:
+		return 0
+	}
 }
