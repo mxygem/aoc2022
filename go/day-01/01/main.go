@@ -30,7 +30,14 @@ func main() {
 	}
 
 	log.Printf("found %d elves", len(elves))
-	log.Printf("the elf with the most calories is elf #%d with %d\n", elves[0].origPos+1, elves[0].total)
+	log.Printf("the elf with the most calories is elf #%d with %d", elves[0].origPos+1, elves[0].total)
+
+	log.Println("the top three elves are:")
+	top3 := elves[:3]
+	for _, e := range top3 {
+		log.Printf("elf #%d with %d", e.origPos+1, e.total)
+	}
+	log.Printf("and together, they are holding %d worth of calories", top3[0].total+top3[1].total+top3[2].total)
 }
 
 func readInput(loc string) ([]string, error) {
